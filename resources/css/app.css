@@ -1,11 +1,86 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.jsx';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+
+    /* Batuan Heritage Theme Colors */
+    --color-gold: #c8a55c;
+    --color-gold-deep: #a67c3d;
+    --color-gold-light: #d4b978;
+
+    --color-stone: #2d2a26;
+    --color-stone-warm: #1a1714;
+
+    --color-emerald: #3a7d44;
+    --color-terracotta: #b5553a;
+
+    --color-cream: #faf7f0;
+    --color-sand: #e8e0d0;
+    --color-gray-stone: #6b6560;
+    --color-gray-light: #d1cbc3;
+}
+
+/* Rich text content styling */
+.prose-batuan h2 {
+    font-family: var(--font-serif);
+    color: var(--color-stone);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.prose-batuan h3 {
+    font-family: var(--font-serif);
+    color: var(--color-stone);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.prose-batuan p {
+    color: var(--color-gray-stone);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.prose-batuan ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.prose-batuan li {
+    color: var(--color-gray-stone);
+    line-height: 1.8;
+    margin-bottom: 0.25rem;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-gray-light);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-stone);
 }

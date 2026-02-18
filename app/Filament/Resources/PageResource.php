@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\PageResource\Pages;
+use App\Models\Page;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class PageResource extends Resource
+{
+    protected static ?string $model = Page::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static ?string $navigationGroup = 'Content';
+
+    protected static ?int $navigationSort = 0;
+
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Forms\Components\Section::make('Content')
+                ->schema([
+                    Forms\Components\TextInput::make('title')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('slug')
+                        ->required()
+                        ->maxLength(255)
+                        ->unique(ignoreRecord: true),
+                    Forms\Components\RichEditor::make('body')
+                        ->required()
+                        ->columnSpanFull(),
+                ])->columns(2),
+
+            Forms\Components\Section::make('SEO & Media')
+                ->schema([
+                    Forms\Components\FileUpload::make('featured_image')
+                        ->image()
+                        ->directory('pages'),
+                    Forms\Components\FileUpload::make('og_image')
+                        ->image()
+                        ->directory('pages/og'),
+                    Forms\Components\TextInput::make('meta_title')
+                        ->maxLength(70),
+                    Forms\Components\TextInput::make('meta_description')
+                        ->maxLength(160),
+                ])->columns(2),
+
+            Forms\Components\Section::make('Settings')
+                ->schema([
+                    Forms\Components\Select::make('language')
+                        ->options(['en' => 'English', 'id' => 'Indonesian'])
+                        ->required()
+                        ->default('en'),
+                    Forms\Components\Select::make('status')
+                        ->options(['draft' => 'Draft', 'published' => 'Published'])
+                        ->required()
+                        ->default('draft'),
+                    Forms\Components\TextInput::make('sort_order')
+                        ->numeric()
+                        ->default(0),
+                ])->columns(3),
+        ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\BadgeColumn::make('language')
+                    ->colors(['primary' => 'en', 'info' => 'id']),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->colors(['warning' => 'draft', 'success' => 'published']),
+                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(['draft' => 'Draft', 'published' => 'Published']),
+                Tables\Filters\SelectFilter::make('language')
+                    ->options(['en' => 'English', 'id' => 'Indonesian']),
+            ])
+            ->actions([Tables\Actions\EditAction::make()])
+            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListPages::route('/'),
+            'create' => Pages\CreatePage::route('/create'),
+            'edit' => Pages\EditPage::route('/{record}/edit'),
+        ];
+    }
+}
