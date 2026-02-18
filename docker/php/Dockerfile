@@ -1,5 +1,6 @@
 FROM php:8.4-fpm-alpine
 
+# Install system dependencies
 RUN apk add --no-cache \
     linux-headers \
     git \
@@ -9,10 +10,12 @@ RUN apk add --no-cache \
     libxml2-dev \
     zip \
     unzip \
-    mariadb-client
+    mariadb-client \
+    icu-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-configure intl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl
 
 # Install Redis extension
 RUN apk add --no-cache pcre-dev $PHPIZE_DEPS \
